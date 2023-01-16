@@ -1,5 +1,9 @@
 <?php
 
+if (!defined('ABSPATH')) {
+    die('Wrong way');
+}
+
 use Carbon_Fields\Field;
 use Carbon_Fields\Container;
 

@@ -1,5 +1,9 @@
 <?php
 
+if (!defined('ABSPATH')) {
+    die('Wrong way');
+}
+
 add_shortcode('lucky-contact-form', 'show_contact_form');
 
 add_action('rest_api_init', 'create_rest_endpoint');
@@ -55,13 +59,13 @@ function fill_submission_columns($column, $post_id)
 
     switch ($column) {
         case 'name':
-            echo get_post_meta($post_id, 'name', true);
+            echo esc_html(get_post_meta($post_id, 'name', true));
             break;
         case 'email':
-            echo get_post_meta($post_id, 'email', true);
+            echo esc_html(get_post_meta($post_id, 'email', true));
             break;
         case 'phone':
-            echo get_post_meta($post_id, 'phone', true);
+            echo esc_html(get_post_meta($post_id, 'phone', true));
             break;
     }
 }
@@ -96,7 +100,7 @@ function display_submission()
 
     echo '<ul>';
     foreach ($post_metas as $key => $value) {
-        echo '<li><strong>' . ucfirst($key) . "</strong>:</br>" . $value[0] . '</li>';
+        echo esc_html('<li><strong>' . ucfirst($key) . "</strong>:</br>" . $value[0] . '</li>');
     }
 }
 
@@ -141,6 +145,14 @@ function handle_enquiry($data)
 {
     $params = $data->get_params();
 
+    // Set the fields from the form
+
+    $field_name = sanitize_text_field($params['name']);
+    $field_email = sanitize_text_field($params['email']);
+    $field_phone = sanitize_text_field($params['phone']);
+
+
+
     if (!wp_verify_nonce($params['_wpnonce'], 'wp_rest')) {
         return new WP_REST_Response('Message not sent', 422);
     }
@@ -158,15 +170,15 @@ function handle_enquiry($data)
     $headers = [];
     $headers[] = "From: {$sender_name} <{$sender_email}> ";
     // $headers[] = "Cc: {$sender_name}";
-    $headers[] = "Reply to: {$params['name']} <{$params['email']}>";
-    $subject = "New message from: {$params['name']} <br /> <br />";
+    $headers[] = "Reply to: $field_name <$field_email>";
+    $subject = "New message from: $field_name <br /> <br />";
 
 
     $message = " ";
-    $message .= "Message has been sent from {$params['name']} <br /> <br />";
+    $message .= "Message has been sent from $field_name <br /> <br />";
 
     $postarray = [
-        'post_title' => $params['name'],
+        'post_title' => $field_name,
         'post_type' => 'submission',
         'post_status' => 'publish'
     ];
@@ -175,13 +187,11 @@ function handle_enquiry($data)
 
     foreach ($params as $label => $value) {
         $message .= ucfirst($label) . ":" . $value;
-        add_post_meta($post_id, $label, $value);
+        add_post_meta($post_id, $label, sanitize_text_field($value));
     }
 
     wp_mail($sender_email, $subject, $message, $headers);
-
     wp_insert_post($postarray);
-
 
     return new WP_REST_Response('Message sent', 200);
 }
