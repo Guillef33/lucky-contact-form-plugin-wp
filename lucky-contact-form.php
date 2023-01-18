@@ -2,8 +2,8 @@
 
 /**
  * 
- * Plugin Name: Lucky Contact Form
- * Description: Plugin for collect emails in the Lucky Store Theme
+ * Plugin Name: calculadora-cuotas
+ * Description: Plugin for display a calculator in WooCommmerce
  * Version: 1.0.0
  * Text-Domain: options-plugin
  * 
@@ -14,17 +14,17 @@ if (!defined('ABSPATH')) {
 }
 
 
-if (!class_exists('LuckyContactForm')) {
-    class LuckyContactForm
+if (!class_exists('CalculadoraCuotas')) {
+    class CalculadoraCuotas
     {
 
         public function __construct()
         {
-            define('MY_PLUGIN_PATH', plugin_dir_path(__FILE__));
+            define('CALCULADORA_PATH', plugin_dir_path(__FILE__));
 
-            define('MY_PLUGIN_URL', plugin_dir_path(__FILE__));
+            define('CALCULADORA_URL', plugin_dir_path(__FILE__));
 
-            require_once(MY_PLUGIN_PATH .
+            require_once(CALCULADORA_PATH .
                 '/vendor/autoload.php'
             );
         }
@@ -32,28 +32,28 @@ if (!class_exists('LuckyContactForm')) {
         public function initialize()
         {
 
-            include_once(MY_PLUGIN_PATH .
+            include_once(CALCULADORA_PATH .
                 '/inc/utils.php'
             );
-            include_once(MY_PLUGIN_PATH .
+            include_once(CALCULADORA_PATH .
                 '/inc/options-page.php'
             );
 
-            include_once(MY_PLUGIN_PATH .
+            include_once(CALCULADORA_PATH .
                 '/inc/contact-form.php'
             );
         }
     }
     // Runs the constructor
-    $LuckyContactForm = new LuckyContactForm;
+    $CalculadoraCuotas = new CalculadoraCuotas;
     // Inicialize the class
-    $LuckyContactForm->initialize();
+    $CalculadoraCuotas->initialize();
 }
 
-add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
+add_action('wp_enqueue_scripts', 'enqueue_custom_scripts_presupuesto');
 
-function enqueue_custom_scripts()
+function enqueue_custom_scripts_presupuesto()
 {
 
-    wp_enqueue_style('lucky-contact-form', plugin_dir_url(__FILE__) . 'assets/css/contact-styles.css');
+    wp_enqueue_style('calculadora-cuotas', plugin_dir_url(__FILE__) . 'assets/css/contact-styles.css');
 }

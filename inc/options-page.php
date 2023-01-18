@@ -18,7 +18,7 @@ function load_carbon_fields()
 
 function create_options_page()
 {
-    Container::make('theme_options', __('Lucky Contact Form'))
+    Container::make('theme_options', __('Calculadora-Cuotas'))
         ->set_icon('dashicons-email')
         ->add_fields(
             array(

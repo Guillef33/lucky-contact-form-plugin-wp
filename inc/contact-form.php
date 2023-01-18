@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     die('Wrong way');
 }
 
-add_shortcode('lucky-contact-form', 'show_contact_form');
+add_shortcode('calculadora-cuotas', 'show_contact_form');
 
 add_action('rest_api_init', 'create_rest_endpoint');
 
@@ -18,12 +18,12 @@ add_action('manage_submission_posts_custom_column', 'fill_submission_columns', 1
 
 add_action('admin_init', 'setup_search');
 
-add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
+add_action('wp_enqueue_scripts', 'enqueue_custom_scripts_presupuesto');
 
 function setup_search()
 {
     global $typenow;
-    if ($typenow  === 'subsmission') {
+    if ($typenow  === 'presupuesto') {
         add_filter('posts-search', 'submission_search_override', 10, 2);
     }
 }
@@ -88,7 +88,7 @@ function custom_submission_columns($columns)
 
 function create_meta_box()
 {
-    add_meta_box('custom_contact_form', 'Submission', 'display_submission', 'submission');
+    add_meta_box('custom_contact_form', 'Presupuesto', 'display_submission', 'presupuesto');
 }
 
 function display_submission()
@@ -111,8 +111,8 @@ function create_submissions_page()
         'public' => true,
         'has_archive' => true,
         'labels' => [
-            'name' => 'Submissions',
-            'singular_name' => "Submission"
+            'name' => 'Presupuestos',
+            'singular_name' => "Presupuesto"
         ],
         // Disable to create new submissions
         // 'capabilities' => ['create_posts' => 'do_not_allow']
@@ -122,13 +122,13 @@ function create_submissions_page()
         'map_meta_cap' => true
     ];
 
-    register_post_type('submission', $args);
+    register_post_type('presupuesto', $args);
 }
 
 
 function show_contact_form()
 {
-    include(MY_PLUGIN_PATH .
+    include(CALCULADORA_PATH .
         '/templates/contact-form.php'
     );
 }
@@ -179,7 +179,7 @@ function handle_enquiry($data)
 
     $postarray = [
         'post_title' => $field_name,
-        'post_type' => 'submission',
+        'post_type' => 'presupuesto',
         'post_status' => 'publish'
     ];
 
